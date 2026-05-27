@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raízes de Fé - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <button id="menuToggle" class="menu-btn">☰</button>
+      <img
+        src="assets/images/logotipo.png"
+        alt="Logotipo Sistema Raízes de Fé"
+        class="logo"
+      />
+      <h1>Raizes de Fé</h1>
+      <div class="header-right">
+        <span id="NomeUsuario"></span>
+        <button id="logoutBtn">Sair</button>
+      </div>
+    </header>
+    <nav id="sidebar" class="sidebar">
+      <ul>
+        <li>
+          <a href="#" data-section="atendimentos" class="nav-link"
+            >Atendimentos</a
+          >
+        </li>
+        <li>
+          <a href="#" data-section="tratamentos" class="nav-link"
+            >Tratamentos</a
+          >
+        </li>
+        <li>
+          <a href="#" data-section="trabalhadores" class="parent"
+            >Trabalhadores</a
+          >
+          <ul class="submenu">
+            <li>
+              <a href="#" data-section="pessoas" class="nav-link">Pessoas</a>
+            </li>
+            <li>
+              <a href="#" data-section="usuarios" class="nav-link">Usuários</a>
+            </li>
+            <li><a href="#" data-section="guias" class="nav-link">Guias</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#" data-section="consulentes" class="nav-link"
+            >Consulentes</a
+          >
+        </li>
+        <li>
+          <a href="#" data-section="gerenciamento" class="parent"
+            >Gerenciamento</a
+          >
+          <ul class="submenu">
+            <li><a href="#" data-section="itens" class="nav-link">Itens</a></li>
+            <li>
+              <a href="#" data-section="funcoes" class="nav-link">Funções</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <main id="main-content">
+      <div class="welcome-card">
+        <h2>Bem-vindo</h2>
+        <p>Casa de Umbanda Vovó Maria Conga</p>
+        <img src="assets/images/VovoMariaConga.png" alt="" />
+        <p>Selecione uma opção no menu lateral para começar.</p>
+      </div>
+    </main>
+    <footer>
+      <div>
+        <p>&copy; 2026 Raízes de Fé. Todos os direitos reservados.</p>
+      </div>
+      <div>
+        <p>Desenvolvido por 3StarTecH</p>
+      </div>
+    </footer>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="../js/funcoes.js"></script>
+  </body>
+</html>

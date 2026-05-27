@@ -1,0 +1,233 @@
+<!-- Lista as funções cadastradas -->
+<div class="welcome-card">
+  <header class="header-paginas">
+    <h2>Funções</h2>
+    <div>
+      <button id="reload" class="btn-default">
+        <i data-lucide="refresh-cw" class="refresh-cw"></i>
+        Recarregar
+      </button>
+      <button id="create" class="btn-default">
+        <i data-lucide="plus" class=""></i>
+        Cadastrar
+      </button>
+    </div>
+  </header>
+  <main class="conteudo-paginas">
+    <table class="Lista-dados">
+      <thead class="Cabecalho-Tabela">
+        <tr>
+          <th>Nome</th>
+          <th class="vDesktop">Descrição</th>
+          <th class="vDesktop">Última Atualização</th>
+          <th class="vDesktop">Responsável</th>
+          <th colspan="3">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="funcoesLista">
+        <!-- Conteúdo da tabela será preenchido pelo JavaScript -->
+      </tbody>
+    </table>
+  </main>
+</div>
+<!-- Modal para cadastro de função -->
+<div id="overlayModalFuncao" class="overlay-modal">
+  <div id="modalFuncao" class="modal">
+    <div class="modal-header">
+      <h3>Cadastrar Função</h3>
+      <button type="button" id="btnFecharModalFuncao" class="btn-fechar-modal">
+        ×
+      </button>
+    </div>
+
+    <form id="formFuncao" class="form-cadastro">
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nomeFuncao" name="nome" required />
+      </div>
+
+      <div class="form-group">
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricaoFuncao" name="descricao"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="btnCancelarModalFuncao" class="btn-default">
+          <i data-lucide="circle-x" class=""></i>Cancelar
+        </button>
+        <button type="button" id="btnCadastrarModalFuncao" class="btn-default">
+          <i data-lucide="plus" class=""></i>Cadastrar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Modal para edição de função -->
+<div id="overlayModalFuncaoEditar" class="overlay-modal">
+  <div id="modalFuncao" class="modal">
+    <div class="modal-header">
+      <h3>Editar Função</h3>
+      <button
+        type="button"
+        id="btnFecharModalEditarFuncao"
+        class="btn-fechar-modal"
+      >
+        ×
+      </button>
+    </div>
+
+    <form id="formEditarFuncao" class="form-cadastro">
+      <input type="text" id="idFuncaoEditar" name="id" hidden />
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nomeFuncaoEditar" name="nome" required />
+      </div>
+
+      <div class="form-group">
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricaoFuncaoEditar" name="descricao"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          id="btnCancelarModalEditarFuncao"
+          class="btn-default"
+        >
+          <i data-lucide="circle-x" class=""></i>Cancelar
+        </button>
+        <button
+          type="button"
+          id="btnSalvarModalEditarFuncao"
+          class="btn-default"
+        >
+          <i data-lucide="plus" class=""></i>Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Modal para visualização os detalhes da função e suas atribuições-->
+<div id="overlayModalFuncaoVisualizar" class="overlay-modal">
+  <div id="modalFuncao" class="modal-visualizar">
+    <div class="modal-header">
+      <h3>Detalhes da Função</h3>
+      <button
+        type="button"
+        id="btnFecharModalVisualizarFuncao"
+        class="btn-fechar-modal"
+      >
+        ×
+      </button>
+    </div>
+    <div id="conteudoVisualizarFuncao" class="conteudo-visualizar">
+      <div id="informacoesGerais" class="informacoes-gerais">
+        <div>
+          <input type="text" id="idFuncaoVisualizar" name="id" hidden />
+          <h3 id="nomeVisualizarFuncao"></h3>
+          <p id="descricaoVisualizarFuncao"></p>
+        </div>
+        <div>
+          <p>Criado em: <span id="criadoEmVisualizarFuncao"></span></p>
+          <p>Por: <span id="criadoPorVisualizarFuncao"></span></p>
+          <p>
+            Última atualização: <span id="atualizadoEmVisualizarFuncao"></span>
+          </p>
+          <p>Por: <span id="atualizadoPorVisualizarFuncao"></span></p>
+        </div>
+      </div>
+      <div>
+        <button id="adicionarAtribuicao" class="btn-default">
+          <i data-lucide="plus" class=""></i>Adicionar Atribuição
+        </button>
+      </div>
+      <div id="informacoesComplementares" class="informacoes-complementares">
+        <div id="atribuicoesVisualizarFuncao" class="lista-visualizacao">
+          <h3>Atribuições</h3>
+          <ul id="listaAtribuicoesVisualizarFuncao">
+            <!-- Conteúdo da tabela será preenchido pelo JavaScript -->
+          </ul>
+        </div>
+        <div id="trabalhadoresNessaFuncao" class="lista-visualizacao">
+          <h3>Trabalhadores</h3>
+          <ul id="listaTrabalhadoresVisualizarFuncao">
+            <!-- Conteúdo da tabela será preenchido pelo JavaScript -->
+          </ul>
+        </div>
+      </div>
+      <div id="modalAtributos" class="overlay-modal">
+        <div class="modal">
+          <div class="modal-header">
+            <h3>Adicionar Atribuição</h3>
+            <button
+              type="button"
+              id="btnFecharModalAtributos"
+              class="btn-fechar-modal"
+            >
+              ×
+            </button>
+          </div>
+          <div class="modal-atributos barra-rolagem300">
+            <div id="formAtributosContainer">
+              <form id="formAtributos" class="form-cadastro">
+                <input
+                  type="text"
+                  id="idFuncaoAtribuicao"
+                  name="idFuncao"
+                  hidden
+                />
+                <div class="form-group">
+                  <label for="atributo">Atribuição:</label>
+                  <input
+                    type="text"
+                    id="nomeAtribuicao"
+                    name="atributo"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="descricao">Descrição:</label>
+                  <textarea
+                    id="descricaoAtribuicao"
+                    name="descricao"
+                  ></textarea>
+                </div>
+                <div class="modal-actions">
+                  <button
+                    type="button"
+                    id="btnCancelarModalAtributos"
+                    class="btn-default"
+                  >
+                    <i data-lucide="circle-x" class=""></i>Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    id="btnSalvarModalAtributos"
+                    class="btn-default"
+                  >
+                    <i data-lucide="plus" class=""></i>Salvar
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div id="listaAtribuicoesExistentesContainer">
+              <table id="listaAtribuicaoExistente" class="Lista-dados">
+                <thead>
+                  <tr>
+                    <th colspan="2">Atribuição</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="atribuicoesExistentes"
+                  class="lista-atribuicao-existente"
+                >
+                  <!-- Conteúdo da tabela será preenchido pelo JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
