@@ -15,7 +15,7 @@ async function carregarFuncoes() {
     return;
   }
   try {
-    const response = await fetch('http://localhost:3000/api/funcoes', {
+    const response = await fetch('http://http://206.42.45.108/api/funcoes', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ async function cadastrarFuncao() {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch('http://localhost:3000/api/funcoes', {
+    const response = await fetch('http://http://206.42.45.108/api/funcoes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -407,13 +407,16 @@ async function listarAtribuicoesExistentes() {
 
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch('http://localhost:3000/api/atribuicoes', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      'http://http://206.42.45.108/api/atribuicoes',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -523,19 +526,22 @@ async function criarAtribuicaoParaFuncao() {
   const cadastradopor = JSON.parse(localStorage.getItem('user')).id;
 
   try {
-    const response = await fetch('http://localhost:3000/api/atribuicoes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+    const response = await fetch(
+      'http://http://206.42.45.108/api/atribuicoes',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          nome,
+          descricao,
+          funcao,
+          cadastradopor,
+        }),
       },
-      body: JSON.stringify({
-        nome,
-        descricao,
-        funcao,
-        cadastradopor,
-      }),
-    });
+    );
 
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
