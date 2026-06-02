@@ -15,7 +15,7 @@ async function carregarFuncoes() {
     return;
   }
   try {
-    const response = await fetch('http://206.42.45.108/api/funcoes', {
+    const response = await fetch('http://localhost:300/api/funcoes', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ async function cadastrarFuncao() {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch('http://206.42.45.108/api/funcoes', {
+    const response = await fetch('http://localhost:300/api/funcoes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -407,7 +407,7 @@ async function listarAtribuicoesExistentes() {
 
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch('http://206.42.45.108/api/atribuicoes', {
+    const response = await fetch('http://localhost:300/api/atribuicoes', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -523,7 +523,7 @@ async function criarAtribuicaoParaFuncao() {
   const cadastradopor = JSON.parse(localStorage.getItem('user')).id;
 
   try {
-    const response = await fetch('http://206.42.45.108/api/atribuicoes', {
+    const response = await fetch('http://localhost:300/api/atribuicoes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
