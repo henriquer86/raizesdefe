@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const data = { nomeusuario, senha };
 
     // Envia POST
-    fetch('http://206.42.45.108//api/login', {
+    fetch('http://206.42.45.108/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
