@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   //JSON.parse(userStr);
   const dadosDoUsuario = fetch(
-    'http://localhost:3000/api/pessoa:${userStr.id}',
+    'http://206.42.45.108/api/pessoa:${userStr.id}',
     {
       headers: {
         Authorization: `Bearer ${token}`,
