@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const data = { nomeusuario, senha };
 
     // Envia POST
-    fetch('http://localhost:300/api/login', {
+    fetch('http://localhost:3000/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
