@@ -4,11 +4,27 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
+const allowedOrigins = process.env.FRONTEND_URL.split(',');
+
 // Middleware para parsing JSON
 app.use(express.json());
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//   }),
+// );
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      // Permite requisições sem origin (ex.: curl) ou se o domínio está na lista
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
