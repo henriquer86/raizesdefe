@@ -8,13 +8,6 @@ const allowedOrigins = process.env.FRONTEND_URL.split(',');
 
 // Middleware para parsing JSON
 app.use(express.json());
-// app.use(
-//   cors({
-//     origin: process.env.FRONTEND_URL,
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//   }),
-// );
 app.use(
   cors({
     origin: function (origin, callback) {
