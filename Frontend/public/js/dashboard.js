@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   //JSON.parse(userStr);
   const dadosDoUsuario = fetch(
-    'http://206.42.45.108/api/pessoa:${userStr.id}',
+    'https://raizesdefe.com.br/api/pessoa:${userStr.id}',
     {
       headers: {
         Authorization: `Bearer ${token}`,

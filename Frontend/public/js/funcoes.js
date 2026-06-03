@@ -15,7 +15,7 @@ async function carregarFuncoes() {
     return;
   }
   try {
-    const response = await fetch('http://206.42.45.108/api/funcoes', {
+    const response = await fetch('https://raizesdefe.com.br/api/funcoes', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ async function cadastrarFuncao() {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch('http://206.42.45.108/api/funcoes', {
+    const response = await fetch('https://raizesdefe.com.br/api/funcoes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -208,13 +208,16 @@ container.addEventListener('click', (event) => {
 async function editarFuncao(id) {
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch(`http://206.42.45.108/api/funcoes/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `https://raizesdefe.com.br/api/funcoes/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -242,19 +245,22 @@ async function salvarEdicaoFuncao(id) {
   }
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch(`http://206.42.45.108/api/funcoes/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `https://raizesdefe.com.br/api/funcoes/${id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          nome,
+          descricao,
+          alteradopor,
+          dataultimaalteracao,
+        }),
       },
-      body: JSON.stringify({
-        nome,
-        descricao,
-        alteradopor,
-        dataultimaalteracao,
-      }),
-    });
+    );
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -282,13 +288,16 @@ container.addEventListener('click', (event) => {
 async function verFuncao(id) {
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch(`http://206.42.45.108/api/funcoes/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `https://raizesdefe.com.br/api/funcoes/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -316,13 +325,16 @@ async function verFuncao(id) {
 
   //listar atribuições da função
   try {
-    const response = await fetch(`http://206.42.45.108/api/atribuicoes/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `https://raizesdefe.com.br/api/atribuicoes/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -355,7 +367,7 @@ async function excluirFuncao(id) {
 
   try {
     const response = await fetch(
-      `http://206.42.45.108/api/atribuicoes/funcao/${id}`,
+      `https://raizesdefe.com.br/api/atribuicoes/funcao/${id}`,
       {
         method: 'DELETE',
         headers: {
@@ -373,13 +385,16 @@ async function excluirFuncao(id) {
   }
 
   try {
-    const response = await fetch(`http://206.42.45.108/api/funcoes/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `https://raizesdefe.com.br/api/funcoes/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -404,7 +419,7 @@ async function listarAtribuicoesExistentes() {
 
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch('http://206.42.45.108/api/atribuicoes', {
+    const response = await fetch('https://raizesdefe.com.br/api/atribuicoes', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -458,14 +473,17 @@ async function listarAtribuicoesExistentes() {
       const token = localStorage.getItem('token');
 
       try {
-        const response = await fetch(`http://206.42.45.108/api/atribuicoes`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          `https://raizesdefe.com.br/api/atribuicoes`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ nome, descricao, funcao, cadastradopor }),
           },
-          body: JSON.stringify({ nome, descricao, funcao, cadastradopor }),
-        });
+        );
 
         if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
 
@@ -483,7 +501,7 @@ async function listarAtribuicoesExistentes() {
     //   }
 
     //   try {
-    //     const response = await fetch(`http://206.42.45.108/api/atibuicoes`, {
+    //     const response = await fetch(`https://raizesdefe.com.br/api/atibuicoes`, {
     //       method: 'POST',
     //       headers: {
     //         'Content-Type': 'application/json',
@@ -520,7 +538,7 @@ async function criarAtribuicaoParaFuncao() {
   const cadastradopor = JSON.parse(localStorage.getItem('user')).id;
 
   try {
-    const response = await fetch('http://206.42.45.108/api/atribuicoes', {
+    const response = await fetch('https://raizesdefe.com.br/api/atribuicoes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -554,13 +572,16 @@ async function removerAtribuicaoDaFuncao(id) {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch(`http://206.42.45.108/api/atribuicoes/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `https://raizesdefe.com.br/api/atribuicoes/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
