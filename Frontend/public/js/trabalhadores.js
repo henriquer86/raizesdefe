@@ -313,8 +313,8 @@ async function cadastrarTrabalhador() {
       },
       body: JSON.stringify({
         nome,
-        telefone,
-        datadenascimento,
+        telefone: String(telefone),
+        datadenascimento: datadenascimento || null,
         cadastradopor,
       }),
     });
