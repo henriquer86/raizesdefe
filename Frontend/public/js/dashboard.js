@@ -1,43 +1,43 @@
-document.addEventListener('DOMContentLoaded', function () {
+const API_URL = window.APP_CONFIG.API_URL;
+
+document.addEventListener('DOMContentLoaded', async function () {
   'use strict';
 
-  let currentSection = 'home'; // ← NOVA (rastreia seção)
+  let currentSection = 'home';
 
-  // Check authentication
   const userStr = localStorage.getItem('user');
+  const user = JSON.parse(userStr);
   const token = localStorage.getItem('token');
 
-  if (!userStr || !token) {
+  if (!user || !token) {
     window.location.href = 'index.html';
     return;
   }
-  //JSON.parse(userStr);
-  const dadosDoUsuario = fetch(
-    'https://raizesdefe.com.br/api/pessoa:${userStr.id}',
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
 
-  const nomeUsuario = document.getElementById('NomeUsuario');
+  // Agora pode usar await normalmente
+  try {
+    const response = await fetch(`${API_URL}/pessoas/${user.pessoa}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  const nomeCompleto = dadosDoUsuario.nome;
+    if (!response.ok) {
+      throw new Error(`Erro HTTP ${response.status}`);
+    }
 
-  if (nomeUsuario) {
-    nomeUsuario.textContent = getFirstName(nomeCompleto);
+    const dadosDoUsuario = await response.json();
+    const nomeUsuario = document.getElementById('NomeUsuario');
+    const nomeCompleto = dadosDoUsuario.nome;
+
+    if (nomeUsuario) {
+      nomeUsuario.textContent = getFirstName(nomeCompleto);
+    }
+  } catch (err) {
+    console.error('Erro ao carregar dados do usuário:', err);
   }
 
   function getFirstName(dado) {
-    // Remove espaços em branco no início e no fim da string
     const nomeLimpo = dado ? dado.trim() : '';
-    // Divide a string por um ou mais espaços em branco, ignorando múltiplos espaços
     const partes = nomeLimpo.split(/\s+/);
-    // Retorna a primeira parte não vazia (primeiro nome)
-    // Para nomes compostos como "Maria da Conceição", pega "Maria"
-    // Para nome único como "João", retorna "João"
-    // Lida com espaços extras e strings vazias
     return partes[0] || 'Anônimo';
   }
 
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
     atendimentos: 'pages/atendimentos.html',
     tratamentos: 'pages/tratamentos.html',
     trabalhadores: 'pages/trabalhadores.html',
-    pessoas: 'pages/pessoas.html',
     usuarios: 'pages/usuarios.html',
     guias: 'pages/guias.html',
     consulentes: 'pages/consulentes.html',
@@ -84,6 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
       currentSection = section;
       if (section === 'funcoes' && window.initFuncoes) {
         window.initFuncoes();
+      } else if (section === 'trabalhadores' && window.initTrabalhadores) {
+        window.initTrabalhadores();
       }
       lucide.createIcons();
 

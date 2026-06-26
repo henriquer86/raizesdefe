@@ -9,17 +9,18 @@ const TrabalhadorRepository = {
    * @param {Object} data - Dados: pessoa, funcao, cadastradopor, alteradopor (opcional)
    */
   async create(data) {
-    const { pessoa, funcao, cadastradopor, alteradopor } = data;
+    const { pessoa, funcao, cadastradopor } = data;
+    const datacadastro = new Date();
     const query = `
-      INSERT INTO trabalhador (pessoa, funcao, cadastradopor, alteradopor)
+      INSERT INTO trabalhador (pessoa, funcao, datacadastro, cadastradopor)
       VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
     const result = await pool.query(query, [
       pessoa,
       funcao,
+      new Date(datacadastro),
       cadastradopor,
-      alteradopor,
     ]);
     return result.rows[0];
   },
@@ -46,6 +47,18 @@ const TrabalhadorRepository = {
     `;
     const result = await pool.query(query, [id]);
     return result.rows[0] || null;
+  },
+
+  /**
+   * Busca trabalhador por Funcao ID
+   * @param {string} id - UUID da função
+   */
+  async findByFuncaoId(id) {
+    const query = `
+    SELECT * FROM trabalhador WHERE funcao = $1
+  `;
+    const result = await pool.query(query, [id]);
+    return result.rows; // retorna lista completa
   },
 
   /**

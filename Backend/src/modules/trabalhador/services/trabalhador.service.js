@@ -18,6 +18,12 @@ module.exports = {
     return trabalhador;
   },
 
+  async getByFuncaoId(id) {
+    const trabalhadores = await repository.findByFuncaoId(id);
+    // Se não houver nenhum, retorna lista vazia em vez de quebrar tudo
+    return trabalhadores;
+  },
+
   async update(id, data) {
     await this.getById(id);
     return repository.update(id, data);

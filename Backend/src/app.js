@@ -1,23 +1,14 @@
-require('dotenv').config({ path: __dirname + '/../.env' });
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
 const app = express();
 
-const allowedOrigins = process.env.FRONTEND_URL.split(',');
-
 // Middleware para parsing JSON
 app.use(express.json());
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Permite requisições sem origin (ex.: curl) ou se o domínio está na lista
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
@@ -32,14 +23,17 @@ app.get('/', (req, res) => {
 const pool = require('./config/database.js');
 
 // Rotas com prefixo /api
-// app.use('/api', require('./modules/pessoa/routes/pessoa.routes'));
-// app.use('/api', require('./modules/usuario/routes/usuario.routes'));
+app.use('/api/pessoas', require('./modules/pessoa/routes/pessoa.routes'));
 app.use('/api/funcoes', require('./modules/funcao/routes/funcao.routes'));
 app.use(
   '/api/atribuicoes',
   require('./modules/atribuicao/routes/atribuicao.routes'),
 );
-// app.use('/api', require('./modules/trabalhador/routes/trabalhador.routes'));
+app.use(
+  '/api/trabalhadores',
+  require('./modules/trabalhador/routes/trabalhador.routes'),
+);
+app.use('/api/usuarios', require('./modules/usuario/routes/usuario.routes'));
 // app.use('/api', require('./modules/guia/routes/guia.routes.js'));
 // app.use('/api', require('./modules/consulente/routes/consulente.routes'));
 // app.use('/api', require('./modules/vela/routes/vela.routes'));

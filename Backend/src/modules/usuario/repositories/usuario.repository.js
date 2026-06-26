@@ -3,16 +3,10 @@ const pool = require('../../../config/database');
 module.exports = {
   // Cria um novo usuário
   async create(data) {
-    const {
-      nomeusuario,
-      senhahash,
-      nivelacesso,
-      pessoa,
-      cadastradopor,
-      alteradopor = null,
-    } = data;
+    const dataCadastro = new Date();
+    const { nomeusuario, senhahash, nivelacesso, pessoa, cadastradopor } = data;
     const query = `
-      INSERT INTO usuario (nomeusuario, senhahash, nivelacesso, pessoa, cadastradopor, alteradopor)
+      INSERT INTO usuario (nomeusuario, senhahash, nivelacesso, pessoa, datacadastro, cadastradopor)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
     `;
@@ -21,8 +15,8 @@ module.exports = {
       senhahash,
       nivelacesso,
       pessoa,
+      dataCadastro,
       cadastradopor,
-      alteradopor,
     ]);
     return result.rows[0];
   },

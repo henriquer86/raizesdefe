@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const UsuarioService = {
   async create(data) {
     // Gera hash da senha com salt 10
-    const senhahash = bcrypt.hashSync(data.senha, 10);
+    const senhahash = bcrypt.hashSync(data.senhahash, 10);
 
     const createData = {
       nomeusuario: data.nomeusuario,

@@ -23,7 +23,8 @@ function validateId(req, res, next) {
 }
 
 function validateCreate(req, res, next) {
-  const { nomeusuario, senha, nivelacesso, pessoa, cadastradopor } = req.body;
+  const { nomeusuario, senhahash, nivelacesso, pessoa, cadastradopor } =
+    req.body;
 
   // Validação nomeusuario: obrigatório, string, 1-20 chars
   if (
@@ -32,15 +33,13 @@ function validateCreate(req, res, next) {
     nomeusuario.trim().length < 1 ||
     nomeusuario.trim().length > 20
   ) {
-    return res
-      .status(400)
-      .json({
-        erro: 'Nome de usuário obrigatório, string de 1 a 20 caracteres.',
-      });
+    return res.status(400).json({
+      erro: 'Nome de usuário obrigatório, string de 1 a 20 caracteres.',
+    });
   }
 
-  // Validação senha: obrigatória, string min 6 chars (hash tratado no service)
-  if (!senha || typeof senha !== 'string' || senha.length < 6) {
+  // Validação senhahash: obrigatória, string min 6 chars (hash tratado no service)
+  if (!senhahash || typeof senhahash !== 'string' || senhahash.length < 6) {
     return res
       .status(400)
       .json({ erro: 'Senha obrigatória, string com no mínimo 6 caracteres.' });
@@ -53,11 +52,9 @@ function validateCreate(req, res, next) {
     nivelacesso.trim().length < 1 ||
     nivelacesso.trim().length > 20
   ) {
-    return res
-      .status(400)
-      .json({
-        erro: 'Nível de acesso obrigatório, string de 1 a 20 caracteres.',
-      });
+    return res.status(400).json({
+      erro: 'Nível de acesso obrigatório, string de 1 a 20 caracteres.',
+    });
   }
 
   // Validação pessoa: obrigatório UUID
@@ -98,11 +95,9 @@ function validateUpdate(req, res, next) {
     senha !== undefined ||
     nivelacesso !== undefined;
   if (!hasEditable) {
-    return res
-      .status(400)
-      .json({
-        erro: 'Pelo menos um campo editável deve ser informado (nomeusuario, senha ou nivelacesso).',
-      });
+    return res.status(400).json({
+      erro: 'Pelo menos um campo editável deve ser informado (nomeusuario, senha ou nivelacesso).',
+    });
   }
 
   // Validação nomeusuario se presente
@@ -112,11 +107,9 @@ function validateUpdate(req, res, next) {
       nomeusuario.trim().length < 1 ||
       nomeusuario.trim().length > 20
     ) {
-      return res
-        .status(400)
-        .json({
-          erro: 'Nome de usuário deve ser string de 1 a 20 caracteres.',
-        });
+      return res.status(400).json({
+        erro: 'Nome de usuário deve ser string de 1 a 20 caracteres.',
+      });
     }
     req.body.nomeusuario = nomeusuario.trim();
   }
@@ -137,22 +130,18 @@ function validateUpdate(req, res, next) {
       nivelacesso.trim().length < 1 ||
       nivelacesso.trim().length > 20
     ) {
-      return res
-        .status(400)
-        .json({
-          erro: 'Nível de acesso deve ser string de 1 a 20 caracteres.',
-        });
+      return res.status(400).json({
+        erro: 'Nível de acesso deve ser string de 1 a 20 caracteres.',
+      });
     }
     req.body.nivelacesso = nivelacesso.trim();
   }
 
   // Validação alteradopor: obrigatório na atualização
   if (!alteradopor || !isValidUUID(alteradopor)) {
-    return res
-      .status(400)
-      .json({
-        erro: 'Alterado por obrigatório na atualização, deve ser um UUID válido.',
-      });
+    return res.status(400).json({
+      erro: 'Alterado por obrigatório na atualização, deve ser um UUID válido.',
+    });
   }
 
   next();

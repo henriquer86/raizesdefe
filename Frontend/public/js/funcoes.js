@@ -1,9 +1,9 @@
 function initFuncoes() {
-  carregarFuncoes();
+  listarFuncoes();
 }
 
 //Carega a lista de funções cadastradas
-async function carregarFuncoes() {
+async function listarFuncoes() {
   const funcoesList = document.getElementById('funcoesLista');
   if (!funcoesList) {
     console.error('Elemento #funcoesLista não encontrado.');
@@ -15,7 +15,7 @@ async function carregarFuncoes() {
     return;
   }
   try {
-    const response = await fetch('https://raizesdefe.com.br/api/funcoes', {
+    const response = await fetch(`${API_URL}/funcoes`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +41,40 @@ async function carregarFuncoes() {
       return;
     }
 
-    data.forEach((funcao) => {
+    for (const funcao of data) {
+      // Buscar dados da pessoa responsável pela última alteração ou cadastro
+      const responseUsuario = await fetch(
+        `${API_URL}/usuarios/${funcao.alteradopor || funcao.cadastradopor}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      let usuario = {};
+      if (responseUsuario.ok) {
+        usuario = await responseUsuario.json();
+      }
+
+      const responseUsuarioPessoa = await fetch(
+        `${API_URL}/pessoas/${usuario.pessoa}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      let pessoaUsuario = {};
+      if (responseUsuarioPessoa.ok) {
+        pessoaUsuario = await responseUsuarioPessoa.json();
+      }
+
       const row = document.createElement('tr');
       row.innerHTML = `
     <td>${funcao.nome ?? ''}</td>
@@ -51,7 +84,7 @@ async function carregarFuncoes() {
         ? new Date(funcao.dataultimaalteracao).toLocaleString('pt-BR')
         : new Date(funcao.datacadastro).toLocaleString('pt-BR')
     }</td>
-    <td class="vDesktop">${funcao.alteradopor ?? funcao.cadastradopor}</td>
+    <td class="vDesktop">${pessoaUsuario.nome}</td>
     <td>
       <button id="verFuncao" class="btn-default" onclick="verFuncao('${funcao.id}')">
         <i data-lucide="eye"></i>Visualizar
@@ -69,7 +102,7 @@ async function carregarFuncoes() {
     </td>
   `;
       funcoesList.appendChild(row);
-    });
+    }
 
     if (window.lucide) {
       lucide.createIcons();
@@ -102,10 +135,6 @@ container.addEventListener('click', (event) => {
     } else if (btn.id === 'adicionarAtribuicao') {
       document.getElementById('modalAtributos').style.display = 'flex';
       listarAtribuicoesExistentes();
-      // } else if (btn.id === 'btnAdicionarAtribuicaoAFuncao') {
-      //   const nome = btn.getAttribute('data-nome');
-      //   const descricao = btn.getAttribute('data-descricao');
-      //   await adicionarAtribuicaoAFuncao(nome, descricao);
     } else if (btn.id === 'btnSalvarModalAtributos') {
       criarAtribuicaoParaFuncao();
     } else if (btn.id === 'btnRemoverAtribuicao') {
@@ -146,18 +175,23 @@ container.addEventListener('click', (event) => {
 
 // Fecha modal clicando fora dele (overlay)
 container.addEventListener('click', function (event) {
-  if (event.target === overlayModalFuncao) {
-    document.getElementById('overlayModalFuncao').style.display = 'none';
+  const overlayFuncao = document.getElementById('overlayModalFuncao');
+  if (overlayFuncao && event.target === overlayFuncao) {
+    overlayFuncao.style.display = 'none';
   }
-  if (event.target === overlayModalFuncaoEditar) {
-    document.getElementById('overlayModalFuncaoEditar').style.display = 'none';
+  const overlayEditar = document.getElementById('overlayModalFuncaoEditar');
+  if (overlayEditar && event.target === overlayEditar) {
+    overlayEditar.style.display = 'none';
   }
-  if (event.target === overlayModalFuncaoVisualizar) {
-    document.getElementById('overlayModalFuncaoVisualizar').style.display =
-      'none';
+  const overlayVisualizar = document.getElementById(
+    'overlayModalFuncaoVisualizar',
+  );
+  if (overlayVisualizar && event.target === overlayVisualizar) {
+    overlayVisualizar.style.display = 'none';
   }
-  if (event.target === modalAtributos) {
-    document.getElementById('modalAtributos').style.display = 'none';
+  const modalAtributosEl = document.getElementById('modalAtributos');
+  if (modalAtributosEl && event.target === modalAtributosEl) {
+    modalAtributosEl.style.display = 'none';
   }
 });
 
@@ -177,7 +211,7 @@ async function cadastrarFuncao() {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch('https://raizesdefe.com.br/api/funcoes', {
+    const response = await fetch(`${API_URL}/funcoes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -191,7 +225,7 @@ async function cadastrarFuncao() {
     const data = await response.json();
     alert('Função cadastrada com sucesso!');
     document.getElementById('overlayModalFuncao').style.display = 'none';
-    carregarFuncoes();
+    listarFuncoes();
   } catch (error) {
     console.error('Erro ao cadastrar função:', error);
     alert(`Erro: ${error.message}`);
@@ -208,16 +242,13 @@ container.addEventListener('click', (event) => {
 async function editarFuncao(id) {
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch(
-      `https://raizesdefe.com.br/api/funcoes/${id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await fetch(`${API_URL}/funcoes/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -245,29 +276,26 @@ async function salvarEdicaoFuncao(id) {
   }
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch(
-      `https://raizesdefe.com.br/api/funcoes/${id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          nome,
-          descricao,
-          alteradopor,
-          dataultimaalteracao,
-        }),
+    const response = await fetch(`${API_URL}/funcoes/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+      body: JSON.stringify({
+        nome,
+        descricao,
+        alteradopor,
+        dataultimaalteracao,
+      }),
+    });
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
     const data = await response.json();
     alert('Função atualizada com sucesso!');
     document.getElementById('overlayModalFuncaoEditar').style.display = 'none';
-    carregarFuncoes();
+    listarFuncoes();
   } catch (error) {
     console.error('Erro ao atualizar função:', error);
     alert(`Erro: ${error.message}`);
@@ -288,8 +316,20 @@ container.addEventListener('click', (event) => {
 async function verFuncao(id) {
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch(
-      `https://raizesdefe.com.br/api/funcoes/${id}`,
+    const response = await fetch(`${API_URL}/funcoes/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Erro HTTP ${response.status}`);
+    }
+    const data = await response.json();
+    //Preenche o campo usuario cadastro
+    const responseUsuarioCadastro = await fetch(
+      `${API_URL}/usuarios/${data.cadastradopor}`,
       {
         method: 'GET',
         headers: {
@@ -298,10 +338,65 @@ async function verFuncao(id) {
         },
       },
     );
-    if (!response.ok) {
-      throw new Error(`Erro HTTP ${response.status}`);
+
+    let usuarioCadastro = {};
+    if (responseUsuarioCadastro.ok) {
+      usuarioCadastro = await responseUsuarioCadastro.json();
     }
-    const data = await response.json();
+
+    const responseUsuarioPessoa = await fetch(
+      `${API_URL}/pessoas/${usuarioCadastro.pessoa}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    let pessoaUsuarioCadastro = {};
+    if (responseUsuarioPessoa.ok) {
+      pessoaUsuarioCadastro = await responseUsuarioPessoa.json();
+    }
+
+    //Preenche o campo usuario ultima alteração
+    let pessoaUsuarioUltimaAlteracao = { nome: 'sem registro' }; // valor padrão
+
+    if (data.alteradopor) {
+      const responseUsuarioUltimaAlteracao = await fetch(
+        `${API_URL}/usuarios/${data.alteradopor}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (responseUsuarioUltimaAlteracao.ok) {
+        const usuarioUltimaAlteracao =
+          await responseUsuarioUltimaAlteracao.json();
+
+        if (usuarioUltimaAlteracao.pessoa) {
+          const responseUsuarioAlteracaoPessoa = await fetch(
+            `${API_URL}/pessoas/${usuarioUltimaAlteracao.pessoa}`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+
+          if (responseUsuarioAlteracaoPessoa.ok) {
+            pessoaUsuarioUltimaAlteracao =
+              await responseUsuarioAlteracaoPessoa.json();
+          }
+        }
+      }
+    }
+
     // Preencher os campos do modal com os dados da função
     document.getElementById('idFuncaoVisualizar').value = id;
     document.getElementById('nomeVisualizarFuncao').textContent = data.nome;
@@ -311,13 +406,13 @@ async function verFuncao(id) {
       data.datacadastro,
     ).toLocaleString('pt-BR');
     document.getElementById('criadoPorVisualizarFuncao').textContent =
-      data.cadastradopor;
+      pessoaUsuarioCadastro.nome;
     document.getElementById('atualizadoEmVisualizarFuncao').textContent =
       data.dataultimaalteracao
         ? new Date(data.dataultimaalteracao).toLocaleString('pt-BR')
         : 'sem registro';
     document.getElementById('atualizadoPorVisualizarFuncao').textContent =
-      data.alteradopor ?? 'sem registro';
+      pessoaUsuarioUltimaAlteracao.nome || 'sem registro';
   } catch (error) {
     console.error('Erro ao buscar função:', error);
     alert(`Erro: ${error.message}`);
@@ -325,16 +420,13 @@ async function verFuncao(id) {
 
   //listar atribuições da função
   try {
-    const response = await fetch(
-      `https://raizesdefe.com.br/api/atribuicoes/${id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await fetch(`${API_URL}/atribuicoes/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -356,6 +448,52 @@ async function verFuncao(id) {
     console.error('Erro ao buscar atribuições:', error);
     alert(`Erro: ${error.message}`);
   }
+
+  //listar trabalhadores da função
+  try {
+    const response = await fetch(`${API_URL}/trabalhadores/funcao/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Erro HTTP ${response.status}`);
+    }
+    const data = await response.json();
+
+    const responseTrabalhadorPessoa = await fetch(
+      `${API_URL}/pessoas/${data[0].pessoa}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let pessoaTrabalhador = {};
+    if (responseTrabalhadorPessoa.ok) {
+      pessoaTrabalhador = await responseTrabalhadorPessoa.json();
+    }
+    // Processar os dados dos trabalhadores
+    const ul = document.getElementById('listaTrabalhadoresVisualizarFuncao');
+    ul.innerHTML = '';
+    if (data.length === 0) {
+      ul.innerHTML = '<li>Sem trabalhadores cadastrados para esta função.</li>';
+    } else {
+      data.forEach((trabalhador) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${pessoaTrabalhador.nome}`;
+        ul.appendChild(li);
+        lucide.createIcons();
+      });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar trabalhadores:', error);
+    alert(`Erro: ${error.message}`);
+  }
 }
 
 //Excluir função
@@ -366,16 +504,13 @@ async function excluirFuncao(id) {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch(
-      `https://raizesdefe.com.br/api/atribuicoes/funcao/${id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await fetch(`${API_URL}/atribuicoes/funcao/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
@@ -385,23 +520,20 @@ async function excluirFuncao(id) {
   }
 
   try {
-    const response = await fetch(
-      `https://raizesdefe.com.br/api/funcoes/${id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await fetch(`${API_URL}/funcoes/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }
     alert(
       'A função, e todas as suas atribuições, foram excluídas com sucesso!',
     );
-    carregarFuncoes();
+    listarFuncoes();
   } catch (error) {
     console.error('Erro ao excluir função:', error);
     alert(`Erro: ${error.message}`);
@@ -419,7 +551,7 @@ async function listarAtribuicoesExistentes() {
 
   const token = localStorage.getItem('token');
   try {
-    const response = await fetch('https://raizesdefe.com.br/api/atribuicoes', {
+    const response = await fetch(`${API_URL}/atribuicoes`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -473,17 +605,14 @@ async function listarAtribuicoesExistentes() {
       const token = localStorage.getItem('token');
 
       try {
-        const response = await fetch(
-          `https://raizesdefe.com.br/api/atribuicoes`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ nome, descricao, funcao, cadastradopor }),
+        const response = await fetch(`${API_URL}/atribuicoes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-        );
+          body: JSON.stringify({ nome, descricao, funcao, cadastradopor }),
+        });
 
         if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
 
@@ -495,35 +624,6 @@ async function listarAtribuicoesExistentes() {
         alert(`Erro: ${error.message}`);
       }
     }
-    //   async function adicionarAtribuicaoAFuncao(nome, descricao) {
-    //     const funcao = document.getElementById('idFuncaoVisualizar').value;
-    //     const cadastradopor = JSON.parse(localStorage.getItem('user')).id;
-    //   }
-
-    //   try {
-    //     const response = await fetch(`https://raizesdefe.com.br/api/atibuicoes`, {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //       body: JSON.stringify({
-    //         nome,
-    //         descricao,
-    //         funcao,
-    //         cadastradopor,
-    //       }),
-    //     });
-    //     if (!response.ok) {
-    //       throw new Error(`Erro HTTP ${response.status}`);
-    //     }
-    //     const data = await response.json();
-    //     alert('Atribuição adicionada à função com sucesso!');
-    //     document.getElementById('modalAtributos').style.display = 'none';
-    //     verFuncao(funcao);
-    //   } catch (error) {
-    //     alert(`Erro: ${error.message}`);
-    //   }
   } catch (error) {
     console.error('Erro ao buscar atribuições:', error);
     alert(`Erro: ${error.message}`);
@@ -538,7 +638,7 @@ async function criarAtribuicaoParaFuncao() {
   const cadastradopor = JSON.parse(localStorage.getItem('user')).id;
 
   try {
-    const response = await fetch('https://raizesdefe.com.br/api/atribuicoes', {
+    const response = await fetch(`${API_URL}/atribuicoes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -572,16 +672,13 @@ async function removerAtribuicaoDaFuncao(id) {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch(
-      `https://raizesdefe.com.br/api/atribuicoes/${id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await fetch(`${API_URL}/atribuicoes/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
     if (!response.ok) {
       throw new Error(`Erro HTTP ${response.status}`);
     }

@@ -35,6 +35,19 @@ async function getById(req, res) {
   }
 }
 
+// Controlador para buscar trabalhador por Funcao ID
+async function getByFuncaoId(req, res) {
+  try {
+    const { id } = req.params;
+    const trabalhadores = await trabalhadorService.getByFuncaoId(id);
+    return res.status(200).json(trabalhadores);
+  } catch (error) {
+    console.error('Erro em getByFuncaoId:', error);
+    const status = error.status || 500;
+    return res.status(status).json({ message: error.message });
+  }
+}
+
 // Controlador para atualizar trabalhador por ID
 async function update(req, res) {
   try {
@@ -66,6 +79,7 @@ module.exports = {
   create,
   list,
   getById,
+  getByFuncaoId,
   update,
   remove,
 };

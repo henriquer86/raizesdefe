@@ -1,6 +1,6 @@
 {
   "name": "frontend-html-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple frontend with HTML + pure JS served by Express.js",
   "private": true,
   "main": "server.js",

@@ -1,3 +1,5 @@
+const API_URL = window.APP_CONFIG.API_URL;
+
 document.addEventListener('DOMContentLoaded', function () {
   // Elementos necessários
   const form = document.getElementById('loginForm');
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const data = { nomeusuario, senha };
 
     // Envia POST
-    fetch('https://raizesdefe.com.br/api/login', {
+    fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -4,19 +4,20 @@ const pool = require('../../../config/database');
 const pessoaRepository = {
   // Cria uma nova pessoa
   async create(data) {
-    const { nome, telefone, datadenascimento, cadastradopor, alteradopor } =
-      data;
+    const { nome, telefone, datadenascimento, cadastradopor } = data;
+    console.log('Dados recebidos em /api/pessoas:', data);
+    const datacadastro = new Date();
     const query = `
-      INSERT INTO pessoa (nome, telefone, datadenascimento, cadastradopor, alteradopor)
+      INSERT INTO pessoa (nome, telefone, datadenascimento, datacadastro, cadastradopor)
       VALUES ($1, $2, $3, $4, $5)
-      RETURNING *
+      RETURNING id
     `;
     const result = await pool.query(query, [
       nome,
       telefone,
       datadenascimento,
+      new Date(datacadastro),
       cadastradopor,
-      alteradopor,
     ]);
     return result.rows[0];
   },
@@ -38,7 +39,7 @@ const pessoaRepository = {
       WHERE id = $1
     `;
     const result = await pool.query(query, [id]);
-    return result.rows[0] || null;
+    return result.rows[0];
   },
 
   // Atualiza uma pessoa pelo ID, preservando campos não informados
@@ -55,6 +56,7 @@ const pessoaRepository = {
       WHERE id = $1
       RETURNING *
     `;
+
     const result = await pool.query(query, [
       id,
       nome,

@@ -1,0 +1,266 @@
+<!-- Lista as pessoas cadastradas -->
+<div class="welcome-card">
+  <header class="header-paginas">
+    <h2>Trabalhadores</h2>
+    <div>
+      <button id="reload" class="btn-default">
+        <i data-lucide="refresh-cw" class="refresh-cw"></i>
+        Recarregar
+      </button>
+      <button id="criarTrabalhador" class="btn-default">
+        <i data-lucide="plus" class=""></i>
+        Cadastrar
+      </button>
+    </div>
+  </header>
+  <main class="conteudo-paginas">
+    <table class="Lista-dados">
+      <thead class="Cabecalho-Tabela">
+        <tr>
+          <th>Nome</th>
+          <th class="vDesktop">Função</th>
+          <th class="vDesktop">Telefone</th>
+          <th class="vDesktop">Data de Nascimento</th>
+          <th class="vDesktop">Última Atualização</th>
+          <th class="vDesktop">Responsável</th>
+          <th colspan="3">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="trabalhadoresLista">
+        <!-- Conteúdo da tabela será preenchido pelo JavaScript -->
+      </tbody>
+    </table>
+  </main>
+</div>
+<!-- Modal para cadastro do trabalhador-->
+<div id="overlayModalTrabalhador" class="overlay-modal">
+  <div id="modalTrabalhador" class="modal">
+    <div class="modal-header">
+      <h3>Cadastrar Trabalhador</h3>
+      <button
+        type="button"
+        id="btnFecharModalTrabalhador"
+        class="btn-fechar-modal"
+      >
+        ×
+      </button>
+    </div>
+
+    <form id="formTrabalhador" class="form-cadastro">
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nomeTrabalhador" name="nome" required />
+      </div>
+
+      <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefoneTrabalhador" name="telefone" />
+      </div>
+
+      <div class="form-group">
+        <label for="datadenascimento">Data de Nascimento:</label>
+        <input
+          type="date"
+          id="datadenascimentoTrabalhador"
+          name="datadenascimento"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="funcao">Função:</label>
+        <select id="funcaoTrabalhador" name="funcao"></select>
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          id="btnCancelarModalTrabalhador"
+          class="btn-default"
+        >
+          <i data-lucide="circle-x" class=""></i>Cancelar
+        </button>
+        <button type="button" id="btnCadastrarTrabalhador" class="btn-default">
+          <i data-lucide="plus" class=""></i>Cadastrar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Modal para visualização os detalhes do trabalhador-->
+<div id="overlayModalTrabalhadorVisualizar" class="overlay-modal">
+  <div id="modalTrabalhadorVisualizar" class="modal-visualizar">
+    <div class="modal-header">
+      <h3>Detalhes do Trabalhador</h3>
+      <button
+        type="button"
+        id="btnFecharModalVisualizarTrabalhador"
+        class="btn-fechar-modal"
+      >
+        ×
+      </button>
+    </div>
+    <div id="conteudoVisualizarTrabalhador" class="conteudo-visualizar">
+      <div id="informacoesGerais" class="informacoes-gerais">
+        <div>
+          <input type="text" id="idTrabalhadorVisualizar" name="id" hidden />
+          <h3 id="nomeVisualizarTrabalhador"></h3>
+          <p>Telefone: <span id="telefoneVisualizarTrabalhador"></span></p>
+          <p>
+            Data de Nascimento:
+            <span id="datadenascimentoVisualizarTrabalhador"></span>
+          </p>
+        </div>
+        <div>
+          <p>Criado em: <span id="criadoEmVisualizarTrabalhador"></span></p>
+          <p>Por: <span id="criadoPorVisualizarTrabalhador"></span></p>
+          <p>
+            Última atualização:
+            <span id="atualizadoEmVisualizarTrabalhador"></span>
+          </p>
+          <p>Por: <span id="atualizadoPorVisualizarTrabalhador"></span></p>
+        </div>
+      </div>
+      <div>
+        <button id="criarUsuario" class="btn-default">
+          <i data-lucide="plus" class=""></i>Criar Usuário
+        </button>
+      </div>
+      <div id="informacoesComplementares" class="informacoes-complementares">
+        <div id="funcoesVisualizarTrabalhador" class="lista-visualizacao">
+          <h3>Função</h3>
+          <p id="nomeFuncaoVisualizarTrabalhador"></p>
+        </div>
+        <div id="atribuicoesNesseTrabalhador" class="lista-visualizacao">
+          <h3>Atribuições</h3>
+          <ul id="listaAtribuicoesTrabalhadorVisualizar">
+            <!-- Conteúdo da tabela será preenchido pelo JavaScript -->
+          </ul>
+        </div>
+      </div>
+      <div id="modalCadastrarUsuario" class="overlay-modal">
+        <div class="modal">
+          <div class="modal-header">
+            <h3>Criar Usuário</h3>
+            <button
+              type="button"
+              id="btnFecharModalCadastrarUsuario"
+              class="btn-fechar-modal"
+            >
+              ×
+            </button>
+          </div>
+          <div id="formUsuarioContainer">
+            <form id="formUsuario" class="form-cadastro">
+              <div class="form-group">
+                <label for="usuario">Usuário:</label>
+                <input type="text" id="nomeUsuario" name="usuario" required />
+              </div>
+              <div class="form-group">
+                <label for="senha">Senha:</label>
+                <input
+                  type="password"
+                  id="senhaUsuario"
+                  name="senha"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="nivelAcesso">Nível de Acesso:</label>
+                <select id="nivelAcessoUsuario" name="nivelAcesso">
+                  <option value="">Selecione uma opção</option>
+                  <option value="usuario">Trabalhador</option>
+                  <option value="administrador">Administrador</option>
+                </select>
+              </div>
+              <div class="modal-actions">
+                <button
+                  type="button"
+                  id="btnCancelarCadastrarUsuario"
+                  class="btn-default"
+                >
+                  <i data-lucide="circle-x" class=""></i>Cancelar
+                </button>
+                <button
+                  type="button"
+                  id="btnSalvarCadastrarUsuario"
+                  class="btn-default"
+                >
+                  <i data-lucide="plus" class=""></i>Salvar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal para edição do trabalhador -->
+<div id="overlayModalTrabalhadorEditar" class="overlay-modal">
+  <div id="modalTrabalhadorEditar" class="modal">
+    <div class="modal-header">
+      <h3>Editar Trabalhador</h3>
+      <button
+        type="button"
+        id="btnFecharModalEditarTrabalhador"
+        class="btn-fechar-modal"
+      >
+        ×
+      </button>
+    </div>
+
+    <form id="formEditarTrabalhador" class="form-cadastro">
+      <input type="text" id="idTrabalhadorEditar" name="id" hidden />
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nomeTrabalhadorEditar" name="nome" required />
+      </div>
+
+      <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefoneTrabalhadorEditar" name="telefone" />
+      </div>
+
+      <div class="form-group">
+        <label for="datadenascimento">Data de Nascimento:</label>
+        <input
+          type="date"
+          id="dataDeNascimentoTrabalhadorEditar"
+          name="datadenascimento"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="funcao">Função Atual:</label>
+        <input
+          type="text"
+          id="funcaoTrabalhadorEditar"
+          name="funcao"
+          readonly
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="funcaoNova">Nova Função:</label>
+        <select id="novaFuncaoTrabalhadorEditar" name="funcaoNova"></select>
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          id="btnCancelarModalEditarTrabalhador"
+          class="btn-default"
+        >
+          <i data-lucide="circle-x" class=""></i>Cancelar
+        </button>
+        <button
+          type="button"
+          id="btnSalvarModalEditarTrabalhador"
+          class="btn-default"
+        >
+          <i data-lucide="plus" class=""></i>Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

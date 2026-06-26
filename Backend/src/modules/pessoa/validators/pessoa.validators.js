@@ -26,7 +26,6 @@ function isValidDate(dateString) {
 
 const validateId = (req, res, next) => {
   const { id } = req.params;
-
   if (!id || !UUID_REGEX.test(id)) {
     return res.status(400).json({ erro: 'O ID deve ser um UUID válido.' });
   }
@@ -35,24 +34,25 @@ const validateId = (req, res, next) => {
 };
 
 const validateCreate = (req, res, next) => {
-  const { nome, telefone, datadenascimento, cadastradopor } = req.body;
+  let { nome, telefone, datadenascimento, cadastradopor } = req.body;
 
   // Nome obrigatório
-  if (
-    typeof nome !== 'string' ||
-    (nome = nome.trim()).length < 1 ||
-    nome.length > 100
-  ) {
+  if (typeof nome !== 'string') {
+    return res.status(400).json({ erro: 'O nome deve ser uma string.' });
+  }
+  nome = nome.trim();
+  if (nome.length < 1 || nome.length > 100) {
     return res
       .status(400)
       .json({ erro: 'O nome é obrigatório e deve ter de 1 a 100 caracteres.' });
   }
 
   // Telefone obrigatório
-  if (
-    typeof telefone !== 'string' ||
-    (telefone = telefone.trim()).length === 0
-  ) {
+  if (typeof telefone !== 'string') {
+    return res.status(400).json({ erro: 'O telefone deve ser uma string.' });
+  }
+  telefone = telefone.trim();
+  if (telefone.length === 0) {
     return res
       .status(400)
       .json({ erro: 'O telefone é obrigatório e não pode ser vazio.' });
@@ -64,15 +64,13 @@ const validateCreate = (req, res, next) => {
       typeof datadenascimento !== 'string' ||
       !isValidDate(datadenascimento)
     ) {
-      return res
-        .status(400)
-        .json({
-          erro: 'A data de nascimento deve estar no formato YYYY-MM-DD e ser uma data válida.',
-        });
+      return res.status(400).json({
+        erro: 'A data de nascimento deve estar no formato YYYY-MM-DD e ser uma data válida.',
+      });
     }
   }
 
-  // Cadastrado por obrigatório
+  // cadastradopor obrigatório e UUID válido
   if (!cadastradopor || !UUID_REGEX.test(cadastradopor)) {
     return res
       .status(400)
@@ -91,11 +89,9 @@ const validateUpdate = (req, res, next) => {
     telefone === undefined &&
     datadenascimento === undefined
   ) {
-    return res
-      .status(400)
-      .json({
-        erro: 'Pelo menos um campo editável (nome, telefone ou datadenascimento) deve ser informado.',
-      });
+    return res.status(400).json({
+      erro: 'Pelo menos um campo editável (nome, telefone ou datadenascimento) deve ser informado.',
+    });
   }
 
   // Alterado por obrigatório
@@ -107,11 +103,8 @@ const validateUpdate = (req, res, next) => {
 
   // Nome, se presente
   if (nome !== undefined) {
-    if (
-      typeof nome !== 'string' ||
-      (nome = nome.trim()).length === 0 ||
-      nome.length > 100
-    ) {
+    const nomeTrimmed = typeof nome === 'string' ? nome.trim() : '';
+    if (nomeTrimmed.length === 0 || nomeTrimmed.length > 100) {
       return res
         .status(400)
         .json({ erro: 'O nome deve ter de 1 a 100 caracteres.' });
@@ -120,10 +113,8 @@ const validateUpdate = (req, res, next) => {
 
   // Telefone, se presente
   if (telefone !== undefined) {
-    if (
-      typeof telefone !== 'string' ||
-      (telefone = telefone.trim()).length === 0
-    ) {
+    const telefoneTrimmed = typeof telefone === 'string' ? telefone.trim() : '';
+    if (telefoneTrimmed.length === 0) {
       return res.status(400).json({ erro: 'O telefone não pode ser vazio.' });
     }
   }
@@ -135,11 +126,9 @@ const validateUpdate = (req, res, next) => {
         typeof datadenascimento !== 'string' ||
         !isValidDate(datadenascimento)
       ) {
-        return res
-          .status(400)
-          .json({
-            erro: 'A data de nascimento deve estar no formato YYYY-MM-DD e ser uma data válida.',
-          });
+        return res.status(400).json({
+          erro: 'A data de nascimento deve estar no formato YYYY-MM-DD e ser uma data válida.',
+        });
       }
     }
     // null é permitido para limpar o campo
