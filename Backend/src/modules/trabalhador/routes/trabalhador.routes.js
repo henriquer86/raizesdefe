@@ -12,11 +12,11 @@ const router = express.Router();
 // Rota para listar todos os trabalhadores
 router.get('/', controller.list);
 
-// Rota para buscar trabalhador por ID
-router.get('/:id', validateId, controller.getById);
-
 // Rota para buscar trabalhador por Funcao ID
 router.get('/funcao/:id', controller.getByFuncaoId);
+
+// Rota para buscar trabalhador por ID
+router.get('/:id', validateId, controller.getById);
 
 // Rota para criar um novo trabalhador
 router.post('/', validateCreate, controller.create);
