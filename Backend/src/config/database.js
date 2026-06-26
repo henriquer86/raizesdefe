@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
 dotenv.config();
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 const { Pool } = require('pg');
 
 const pool = new Pool({
