@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     gerenciamento: 'pages/gerenciamento.html',
     itens: 'pages/itens.html',
     funcoes: 'pages/funcoes.html',
+    perfil: 'pages/perfil.html',
   };
 
   // Função para mostrar conteúdo carregado via fetch (substitui a versão estática)
@@ -85,6 +86,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         window.initFuncoes();
       } else if (section === 'trabalhadores' && window.initTrabalhadores) {
         window.initTrabalhadores();
+      } else if (section === 'perfil' && window.initPerfil) {
+        window.initPerfil();
       }
       lucide.createIcons();
 
@@ -157,6 +160,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         e.preventDefault();
         showContent(link.dataset.section);
       }
+    });
+  }
+
+  //Listner para página pergil
+  const perfilLink = document.querySelector('.Link-Perfil');
+  if (perfilLink) {
+    perfilLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showContent('perfil');
     });
   }
 

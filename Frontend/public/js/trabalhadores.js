@@ -232,16 +232,24 @@ containerTrabalhador.addEventListener('click', (event) => {
 // Fecha modal clicando fora dele (overlay)
 containerTrabalhador.addEventListener('click', function (event) {
   const overlayTrabalhador = document.getElementById('overlayModalTrabalhador');
+  const overlayTrabalhadorEditar = document.getElementById(
+    'overlayModalTrabalhadorEditar',
+  );
+  const overlayTrabalhadorVisualizar = document.getElementById(
+    'overlayModalTrabalhadorVisualizar',
+  );
+
   if (overlayTrabalhador && event.target === overlayTrabalhador) {
     overlayTrabalhador.style.display = 'none';
   }
-  if (event.target === overlayModalTrabalhadorEditar) {
-    document.getElementById('overlayModalTrabalhadorEditar').style.display =
-      'none';
+  if (overlayTrabalhadorEditar && event.target === overlayTrabalhadorEditar) {
+    overlayTrabalhadorEditar.style.display = 'none';
   }
-  if (event.target === overlayModalTrabalhadorVisualizar) {
-    document.getElementById('overlayModalTrabalhadorVisualizar').style.display =
-      'none';
+  if (
+    overlayTrabalhadorVisualizar &&
+    event.target === overlayTrabalhadorVisualizar
+  ) {
+    overlayTrabalhadorVisualizar.style.display = 'none';
   }
 });
 
@@ -313,8 +321,8 @@ async function cadastrarTrabalhador() {
       },
       body: JSON.stringify({
         nome,
-        telefone: String(telefone),
-        datadenascimento: datadenascimento || null,
+        telefone,
+        datadenascimento,
         cadastradopor,
       }),
     });

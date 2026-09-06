@@ -193,6 +193,11 @@ nav {
   border-bottom: var(--text-color) 1px solid;
 }
 
+.Link-Perfil {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
 .btn-default {
   background: var(--primary-color);
   color: #fff;
